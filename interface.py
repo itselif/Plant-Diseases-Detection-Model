@@ -7,23 +7,49 @@ from tensorflow.keras.preprocessing import image
 from PIL import ImageTk, Image
 
 #%% Load the model
-model = load_model('C:/Users/Elif/OneDrive/Desktop/Plant_diseaseDetection/cnn_best_model.keras')
+model = load_model('C:/Users/Elif/Desktop/Plant_diseaseDetection/eski/cnn_best_model.keras')
 
 #%% Load the CSV data
-disease_data = pd.read_csv('C:/Users/Elif/OneDrive/Desktop/plant_disease_list.csv')
+disease_data = pd.read_csv('C:/Users/Elif/Desktop/Plant_diseaseDetection/Plant_diseases.csv')
 
 #%% Define the class labels
-class_labels = ['Aloevera_Healthy', 'Aloevera_LeafSpot', 'Aloevera_Rust', 'Apple_BlackRot', 'Apple_CedarRust', 
-'Apple_Healthy', 'Apple_Scab', 'Bluberry_SeptoriaLeafSpot', 'Blueberry_AnthracnoseLeaf', 
-'Blueberry_ExobasidiumLeafSpot', 'Blueberry_Healthy', 'Cherry_Healthy', 'Cherry_PowderyMildew', 
-'Corn_CommonRust', 'Corn_CercosporaAndGrayLeafSpot', 'Corn_Healthy', 'Corn_NorthernLeafBlight', 
-'Grape_BlackRot', 'Grape_Esca(BlackMeasles)', 'Grape_Healthy', 'Grape_LeafBlight', 'Orange_Haunglongbing', 
-'Peach_Healthy', 'Peach_BacterialSpot', 'PepperBell_BacterialSpot', 'PepperBell_Healthy', 
-'Potato_EarlyBlight', 'Potato_Healthy', 'Potato_LateBlight', 'Raspberry_Healthy', 'Soybean_Healthy', 
-'Strawberry_Healthy', 'Strawberry_LeafScorch', 'Squash_PowderyMildew', 'Tomato_BacterialSpot', 
-'Tomato_EarlyBlight', 'Tomato_Healthy', 'Tomato_LeafMold', 'Tomato_MosaicVirus', 'Tomato_TargetSpot', 
-'Tomato_YellowLeafCurlVirus', 'Tomato_LateBlight', 'Tomato_SeptoriaLeafSpot', 'Wheat_Healthy', 
-'Wheat_PowderyMildew', 'Wheat_Scab', 'Wheat_Septoria', 'Wheat_StripeRust']
+class_labels = [
+    'Aloevera_Healthy', 'Aloevera_LeafSpot', 'Aloevera_Rust', 
+    'Apple_BlackRot', 'Apple_CedarRust', 'Apple_Healthy', 'Apple_Scab', 
+    'Banana_Anthracnose', 'Banana_BlackLeaf', 'Banana_BunchyTop', 
+    'Banana_CigarAndRot', 'Banana_CordanaLeafSpot', 'Banana_Panama', 
+    'Blueberry_AnthracnoseLeaf', 'Blueberry_ExobasidiumLeafSpot', 
+    'Blueberry_Healthy', 'Blueberry_SeptoriaLeafSpot', 'Cherry_Healthy', 
+    'Cherry_PowderyMildew', 'Coffee_BerryBlotch', 'Coffee_BlackRot', 
+    'Coffee_BrownEyeSpot', 'Coffee_CercosporaLeafSpot', 'Coffee_Healthy', 
+    'Coffee_Rust', 'Corn_CercosporaAndGrayLeafSpot', 'Corn_CommonRust', 
+    'Corn_Healthy', 'Corn_NorthernLeafBlight', 'Cotton_Anthracnose', 
+    'Cotton_Aphids', 'Cotton_BacterialBlight', 'Cotton_BollRot', 
+    'Cotton_CurlVirus', 'Cotton_FusariumWilt', 'Cotton_Healthy', 
+    'Cotton_PowderyMildew', 'Cotton_TargetSpot', 'Cucumber_AngularLeafSpot', 
+    'Cucumber_BacterialWilt', 'Cucumber_PowderyMildew', 'Grape_BlackMeasles', 
+    'Grape_BlackRot', 'Grape_Healthy', 'Grape_LeafBlight', 'Lentil_AscochytaBlight', 
+    'Lentil_Healthy', 'Lentil_PowderyMildew', 'Lentil_Rust', 'Orange_Haunglongbing', 
+    'Peach_BacterialSpot', 'Peach_Healthy', 'PepperBell_BacterialSpot', 
+    'PepperBell_Healthy', 'Potato_EarlyBlight', 'Potato_Healthy', 'Potato_LateBlight', 
+    'Raspberry_Healthy', 'Rice_BacterialBlight', 'Rice_Blast', 'Rice_BrownSpot', 
+    'Rice_Healthy', 'Rice_LeafBlast', 'Rice_LeafSmut', 'Rice_SheathBlight', 'Rice_Tungro', 
+    'Rose_BlackSpot', 'Rose_DownyMildew', 'Rose_Healthy', 'Soybean_Healthy', 
+    'Squash_PowderyMildew', 'Strawberry_Anthracnose', 'Strawberry_Healthy', 
+    'Strawberry_LeafScorch', 'Sugarcane_BacterialBlight', 'Sugarcane_Healthy', 
+    'Sugarcane_Mosaic', 'Sugarcane_RedRot', 'Sugarcane_RedRust', 'Sugarcane_RedStripe', 
+    'Sugarcane_Rust', 'Sugarcane_Yellowing', 'Sunflower_DownyMildew', 'Sunflower_GrayMold', 
+    'Sunflower_Healthy', 'Sunflower_LeafScars', 'Tea_AlgalLeaf', 'Tea_Anthracnose', 
+    'Tea_BirdEyeSpot', 'Tea_BrownBlight', 'Tea_Healthy', 'Tea_RedLeafSpot', 
+    'Tomato_BacterialSpot', 'Tomato_EarlyBlight', 'Tomato_Healthy', 'Tomato_LateBlight', 
+    'Tomato_LeafMold', 'Tomato_MosaicVirus', 'Tomato_SeptoriaLeafSpot', 
+    'Tomato_SpiderMites', 'Tomato_TargetSpot', 'Tomato_YellowLeafCurlVirus', 
+    'Wheat_Aphid', 'Wheat_BacterialLeafStreak', 'Wheat_BlackRust', 'Wheat_BrownRust', 
+    'Wheat_FlagSmut', 'Wheat_Healthy', 'Wheat_LeafBlight', 'Wheat_LooseSmut', 
+    'Wheat_PowderyMildew', 'Wheat_Scab', 'Wheat_Septoria', 'Wheat_SeptoriaBlotch', 
+    'Wheat_StemRust', 'Wheat_StripeRust'
+]
+
 
 #%% Function to predict the image
 def predict_image(image_path):
@@ -131,7 +157,7 @@ disease_details_label = tk.Label(root, text="Disease details will appear here.",
 disease_details_label.grid(row=4, column=0, columnspan=2, sticky="ew", padx=20, pady=10)
 
 # Add some space at the bottom for a more balanced look
-bottom_label = tk.Label(root, text="Plant Disease Detection - Powered by EK", font=("Arial", 12), fg="#888", bg=bg_color)
+bottom_label = tk.Label(root, text="Plant Disease Detection", font=("Arial", 12), fg="#888", bg=bg_color)
 bottom_label.grid(row=6, column=0, columnspan=2, pady=20)
 
 # Run the application
